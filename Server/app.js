@@ -21,6 +21,12 @@ app.use(bodyParser.urlencoded({
 
 dotenv.config();
 
+// pulling in routes
+const index=require("./routes/index");
+
+// plugging in route
+app.use('/index',index);
+
 const port = process.env.PORT || 8001;
 
 // create the server
