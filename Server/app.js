@@ -28,9 +28,11 @@ mongoose.connect(`mongodb+srv://${process.env.DBUSER}:${process.env.DBPASS}@clus
 
 // pulling in routes
 const index=require("./routes/index");
+const auth=require("./routes/auth");
 
 // plugging in route
 app.use('/index',index);
+app.use('/auth',auth);
 
 const port = process.env.PORT || 8001;
 
