@@ -73,6 +73,19 @@ export default {
     methods:{
         register: function (){
 
+            if(this.passwordMatched){
+ 
+                let parent = {
+                    email:this.email,
+                    password:this.password,
+                    title:this.title,
+                    firstName: this.firstName,
+                    lastname: this.lastname
+                }
+
+
+                this.$store.dispatch("login",parent);               
+            }
         }
     },
     computed:{

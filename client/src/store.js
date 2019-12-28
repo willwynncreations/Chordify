@@ -11,19 +11,19 @@ export default new Vuex.Store({
       parent: {},
       authStatus: false,
       token: localStorage.getItem("token") || '',
-      isLoggedIn = false,
-      baseURL = 'localhost:8001/api/'
-   }, 
-   plugins: [
-      createPersistedState({
-         getState: key => Cookies.getJSON(key),
-         setState: (key, state) =>
-            Cookies.set(key, state, {
-               expires: 3,
-               secure: false
-            })
-      })
-   ],
+      isLoggedIn : false,
+      baseURL : 'localhost:8001/api/'
+   },
+   plugins: [createPersistedState({
+      storage: {
+         getItem: key => Cookies.get(key),
+         setItem: (key, value) => Cookies.set(key, value, {
+            expires: 3,
+            secure: true
+         }),
+         removeItem: key => Cookies.remove(key)
+      }
+   })],
    getters:{
       parent: state=>state.parent,
       authStatus: state=>state.authStatus
@@ -41,7 +41,7 @@ export default new Vuex.Store({
          state.parent = {}
       },
       updateParent(state,parent){
-         state.parent = parent,
+         state.parent = parent
       }
    },
    actions:{
@@ -68,21 +68,10 @@ export default new Vuex.Store({
                   resolve();
                }
             })
-            .catch(err){
+            .catch(err=>{
                reject(err);
-            };
-
-         });
-      }, 
-      register({
-         commit
-      }, parent) {
-         return new Promise((resolve, reject) => {
-            fetch('/auth/register');
-
+            });
          });
       }
-
-   }
-    
+   } 
 });
