@@ -48,5 +48,35 @@ router.post('/register',(req,res,next)=>{
 
 
 });
+router.post('/login',(req,res,next)=>{
+    var password = req.body.password;
+    const saltRounds = 10;
+    var email = req.body.email;
 
+    //search for the email, if we get someone then compare the stored hash to the new pw after hasing it.
+    //if we dont find the email return error, if the pws dont match return error.
+
+    User.find({email:email},(err,foundUser)=>{
+        if(err){
+            res.status('400').send(`Error finding user by email ${err}`);
+        }else{
+            let user = foundUser[0];//Get the first(should be only) user found
+
+            bcrypt.compare(password,user.password,(err,passwordMatched)=>{
+                if(err){
+                    res.status('400').send(`Error comparing passwords ${err}`);
+                }else if(passwordMatched){
+                    //passwords matched so we need to return a session and some user data
+                    bcrypt.genSalt().then(rndHash=>{
+                        bcrypt.hash("SESSION",rndHash).then(token =>
+                            res.send({token:token,me:user}));
+                    });
+                }else{
+                
+                    res.status('400').send("Password doesn't match")
+                }
+            });
+        }
+    });
+});
 module.exports=router;
