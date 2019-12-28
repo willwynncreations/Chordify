@@ -21,6 +21,11 @@ app.use(bodyParser.urlencoded({
 
 dotenv.config();
 
+mongoose.connect(`mongodb+srv://${process.env.DBUSER}:${process.env.DBPASS}@cluster0-rdbjw.mongodb.net/${process.env.DB}?retryWrites=true&w=majority`,{
+    useNewUrlParser:true,
+    useFindAndModify:false
+});
+
 // pulling in routes
 const index=require("./routes/index");
 
