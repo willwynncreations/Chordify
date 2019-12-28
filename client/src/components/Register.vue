@@ -54,6 +54,9 @@
                     >
                     </v-text-field>
                 </v-col>
+                <v-col align="right" cols="12" xs="12" md="12">
+                    <v-btn class="primary" @click="register" >Submit</v-btn>
+                </v-col>
             </v-row>
         </v-container>
     </v-form>
@@ -66,6 +69,20 @@ export default {
            valid:true
        
        }
+    },
+    methods:{
+        register: function (){
+
+        }
+    },
+    computed:{
+        passwordMatched:function(){ //Use this to style the confirm password field appropriately and enable/disable the submit button
+            if(this.confirmPassword != this.password){
+                return false;
+            }else{
+                return true;
+            }
+        }
     }
 }
 </script>
