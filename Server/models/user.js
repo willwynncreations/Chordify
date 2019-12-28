@@ -1,26 +1,21 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
-var ChoreSchema = new Schema({
-    title:{
+var UserSchema = new Schema({
+    email:{
         type:String,
         required:true,
         unique:true
     },
-    description:{
+    password:{
         type:String,
         required:true
     },
-    experience:{
-        type:Number,
+    title:{
+        type:String,
         required:true
     },
-    coins:{
-        type:Number,
-        required:true
-    },
-    parent_id:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"User",
+    type:{
+        type:String,
         required:true
     },
     created:{
@@ -28,7 +23,11 @@ var ChoreSchema = new Schema({
         required:true,
         default:Date.now()
     },
-    status:{
+    firstName:{
+        type:String,
+        required:true
+    },
+    lastName:{
         type:String,
         required:true
     }
@@ -36,7 +35,5 @@ var ChoreSchema = new Schema({
 });
 
 
-var choreModel = mongoose.model('Chore',ChoreSchema);
-module.exports = choreModel;
-
-
+var UserModel = mongoose.model('User',UserSchema);
+module.exports = userModel;
