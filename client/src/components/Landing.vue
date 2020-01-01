@@ -19,8 +19,11 @@
 
 <script>
 export default {
+  name:'Landing',
   data(){
-
+    return {
+      
+    }
   }
 }
 </script>

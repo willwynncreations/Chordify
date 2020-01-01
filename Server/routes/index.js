@@ -6,8 +6,14 @@ const router = express.Router();
 
 
 router.get('/',(req,res,next)=>{
-    res.status(200).send(`you found me`);
 
+    let msg = {
+        message:'Successfully routed!'
+    }
+
+
+    res.status(200).send({message:JSON.stringify(msg)});
+    console.log(`This is it!`);
 });
 
 module.exports=router;

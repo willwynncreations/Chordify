@@ -8,7 +8,7 @@
                 <v-row> 
                     <v-card>
                         <v-card-title class="primary white--text">Register New Parent Account</v-card-title>
-                        <v-card-content><RegisterCard/></v-card-content>
+                        <v-card-text><RegisterCard/></v-card-text>
                     </v-card>
                 </v-row>
                 
@@ -21,7 +21,7 @@
 import RegisterCard from '../components/Register'
 export default {
     data(){
-
+        return {}
     },
     components:{
         RegisterCard

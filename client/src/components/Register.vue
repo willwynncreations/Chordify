@@ -1,5 +1,6 @@
 <template>
     <v-form v-model="valid">
+        <v-alert transition="scale-transition" v-if="message" class="error">{{message}}<a href='/login'>Login Now</a></v-alert>
         <v-container >
             <v-row>     
                 <v-col cols="12" xs="12" md="12">
@@ -66,8 +67,14 @@ export default {
     name:"RegisterCard",
     data(){
        return { 
-           valid:true
-       
+           valid:true,
+           email:'',
+           password:'',
+           confirmPassword:'',
+           title:'',
+           firstname:'',
+           lastname:'',
+           message:''
        }
     },
     methods:{
@@ -79,18 +86,27 @@ export default {
                     email:this.email,
                     password:this.password,
                     title:this.title,
-                    firstName: this.firstName,
-                    lastname: this.lastname
+                    firstName: this.firstname,
+                    lastName: this.lastname
                 }
 
-
-                this.$store.dispatch("login",parent);               
+                this.$store.dispatch("register",parent)
+                .then(()=>{
+                        if(this.$store.getters.registerStatus === "success"){
+                            this.$router.push("/login");
+                        }else{
+                            this.message = this.$store.getters.affirmativeMessage
+                            this.$router.push("/register")
+                        }
+                    }
+                )
+                .catch(err=>alert(err));
             }
         }
     },
     computed:{
         passwordMatched:function(){ //Use this to style the confirm password field appropriately and enable/disable the submit button
-            if(this.confirmPassword != this.password){
+            if((this.confirmPassword != this.password) && this.password !== ''){
                 return false;
             }else{
                 return true;

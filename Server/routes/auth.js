@@ -33,9 +33,11 @@ router.post('/register',(req,res,next)=>{
 
                     });
                     user.save((err)=>{
+                        console.log(`error - ${err}`);
                         if(err){
                             res.status(502).send(`Error Registering - ${err}`)
                         }else{
+                            console.log(`Successfully registered ${user}`)
                             res.status(200).send(`Successful`)
                         }
                     });

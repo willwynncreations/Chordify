@@ -12,7 +12,9 @@ export default new Vuex.Store({
       authStatus: false,
       token: localStorage.getItem("token") || '',
       isLoggedIn : false,
-      baseURL : 'localhost:8001/api/'
+      baseURL : '',
+      affirmativeMessage:'',
+      registerStatus:''
    },
    plugins: [createPersistedState({
       storage: {
@@ -26,7 +28,9 @@ export default new Vuex.Store({
    })],
    getters:{
       parent: state=>state.parent,
-      authStatus: state=>state.authStatus
+      authStatus: state=>state.authStatus,
+      affirmativeMessage: state=>state.affirmativeMessage,
+      registerStatus: state=>state.registerStatus
    },
    mutations:{
       authSuccess(state,token){
@@ -42,6 +46,14 @@ export default new Vuex.Store({
       },
       updateParent(state,parent){
          state.parent = parent
+      },
+      registerSuccess(state){
+         state.affirmativeMessage = "Successfully registered, plese login.",
+         state.registerStatus = "success"
+      },
+      registerFailure(state){
+         state.affirmativeMessage = "Failed to register user, user already registered.",
+         state.registerStatus = "failed"
       }
    },
    actions:{
@@ -71,6 +83,32 @@ export default new Vuex.Store({
             .catch(err=>{
                reject(err);
             });
+         });
+      },
+      register({commit},parent){
+         return new Promise((resolve,reject)=>{
+            fetch(`http://localhost:8001/auth/register`, {
+               method: "POST",
+               headers: {
+                  "Content-Type": "application/json"
+               },
+               body: JSON.stringify(parent)
+            })
+               .then(resp => {
+                  if (resp.status == 200) {
+                     //alert(resp.status);
+                     commit("registerSuccess");
+                     resolve();
+                  } else {
+                     commit("registerFailure");
+                     //alert(resp.status);
+                     resolve();
+                  }
+               })
+               .catch(err => {
+                  alert(err);
+                  reject(err);
+               });           
          });
       }
    } 
