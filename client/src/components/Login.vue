@@ -2,6 +2,7 @@
     <v-form>
         <v-container>
             <v-row>
+                <v-alert transition="scale-transition" v-if="message" class="error">{{message}}<a href='/reset'>Forgot Password?</a></v-alert>
                 <v-col cols="12" xs="12" md="12" >
                     <v-text-field
                         v-model="email"
@@ -21,7 +22,6 @@
                     <v-btn
                         class="success"
                         text
-                        flat
                         @click="login"
 
                     >Login</v-btn>
@@ -35,7 +35,9 @@ export default {
     name:'Login',
     data(){
         return{
-
+           email:'',
+           password:'',
+           message:''
         }
     },
     methods:{
@@ -45,7 +47,14 @@ export default {
                 password:this.password
             }
             this.$store.dispatch("login",user)
-            .then(this.$router.push("/"));
+            .then(()=>{
+                if(this.$store.getters.authErrorResponse == 400){
+                    this.message=this.$store.getters.authErrorMessage
+                    this.$store.dispatch("clearAuthError"); // We need to clear the store messages so that we can continue with another login attempt.
+                }else{
+                    this.$router.push("/")
+                }
+            });
         }
     }
 

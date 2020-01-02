@@ -30,6 +30,9 @@ var UserSchema = new Schema({
     lastName:{
         type:String,
         required:true
+    },
+    token:{
+        type:String
     }
    
 });

@@ -34,12 +34,17 @@
         </v-row>
         <v-row
           align="center"
-          justify="center"
+          justify="center"          
           style="height:20px"
         >
           <span><strong>Parent</strong> - {{getParent}}</span>
         </v-row>
-        <v-row>
+        <v-row
+          align="center"
+          justify="center"
+          style="height:201px"
+          
+        >
           <v-btn 
             @click="logout"
             class="success"

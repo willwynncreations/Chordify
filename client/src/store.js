@@ -14,7 +14,9 @@ export default new Vuex.Store({
       isLoggedIn : false,
       baseURL : '',
       affirmativeMessage:'',
-      registerStatus:''
+      registerStatus:'',
+      authErrorResponse:'',
+      authErrorMessage:''
    },
    plugins: [createPersistedState({
       storage: {
@@ -33,7 +35,9 @@ export default new Vuex.Store({
       registerStatus: state=>state.registerStatus,
       isLoggedIn: state=>state.isLoggedIn,
       token: state=>state.token,
-      state: state=>state
+      state: state=>state,
+      authErrorMessage: state=> state.authErrorMessage,
+      authErrorResponse: state=> state.authErrorResponse
    },
    mutations:{
       authSuccess(state,token){
@@ -41,11 +45,13 @@ export default new Vuex.Store({
          state.authStatus = 'Logged In';
          state.isLoggedIn = true;
       },
-      authFailure(state){
+      authFailure(state,response){
          state.token = '';
          state.authStatus = 'Logged Out';
          state.isLoggedIn = false;
          state.parent = {};
+         state.authErrorResponse = response.status;
+         state.authErrorMessage = "Username or password incorrect";
       },
       updateParent(state,parent){
          state.parent = parent;
@@ -62,6 +68,9 @@ export default new Vuex.Store({
       registerFailure(state){
          state.affirmativeMessage = "Failed to register user, user already registered.";
          state.registerStatus = "failed";
+      },clearAuthError(state){
+         state.authErrorMessage = '';
+         state.authErrorResponse = '';
       }
    },
    actions:{
@@ -79,7 +88,7 @@ export default new Vuex.Store({
                   return resp.json();
                }else{
                   localStorage.removeItem("token");
-                  commit("authFailure");
+                  commit("authFailure",resp);
                   resolve();
                }
             })
@@ -127,6 +136,46 @@ export default new Vuex.Store({
             resolve();
          });
          
+      },
+      clearAuthError({commit}){
+         return new Promise((resolve)=>{
+            commit("clearAuthError");
+            resolve();
+         });
+      },
+      LoginWithToken({commit},token){
+         return new Promise((resolve,reject)=>{
+
+            let info = {
+               token:token
+            }
+
+
+            fetch(`http://localhost:8001/auth/loginwithtoken/`, {
+               method: "POST",
+               headers: {
+                  "Content-Type": "application/json"
+               },
+               body: JSON.stringify(info)
+            })
+            .then(resp=>{
+               if(resp.status == 200){
+                  return resp.json();
+               }else{
+                  localStorage.removeItem("token");
+                  commit("authFailure",resp);
+                  resolve();
+               }
+            })
+            .then(data=>{        
+               commit("authSuccess",data.token);
+               resolve();
+            })
+            .catch(err=>{
+               commit("authFailure");
+               reject(err)
+            });
+         });
       }
    } 
 });
