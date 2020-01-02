@@ -45,7 +45,7 @@ export default {
                 password:this.password
             }
             this.$store.dispatch("login",user)
-            .then();
+            .then(this.$router.push("/"));
         }
     }
 

@@ -9,7 +9,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
    state:{
       parent: {},
-      authStatus: false,
+      authStatus: 'Logged Out',
       token: localStorage.getItem("token") || '',
       isLoggedIn : false,
       baseURL : '',
@@ -30,37 +30,44 @@ export default new Vuex.Store({
       parent: state=>state.parent,
       authStatus: state=>state.authStatus,
       affirmativeMessage: state=>state.affirmativeMessage,
-      registerStatus: state=>state.registerStatus
+      registerStatus: state=>state.registerStatus,
+      isLoggedIn: state=>state.isLoggedIn,
+      token: state=>state.token,
+      state: state=>state
    },
    mutations:{
       authSuccess(state,token){
-         state.token = token,
-         state.authStatus = 'success',
-         state.isLoggedIn = true
+         state.token = token;
+         state.authStatus = 'Logged In';
+         state.isLoggedIn = true;
       },
       authFailure(state){
-         state.token = '',
-         state.authStatus = 'failure',
-         state.isLoggedIn = false,
-         state.parent = {}
+         state.token = '';
+         state.authStatus = 'Logged Out';
+         state.isLoggedIn = false;
+         state.parent = {};
       },
       updateParent(state,parent){
-         state.parent = parent
+         state.parent = parent;
+      },
+      logout(state){
+         state.token = '';
+         state.authStatus = 'Logged Out';
+         state.isLoggedIn = false;
       },
       registerSuccess(state){
-         state.affirmativeMessage = "Successfully registered, plese login.",
-         state.registerStatus = "success"
+         state.affirmativeMessage = "Successfully registered, plese login.";
+         state.registerStatus = "success";
       },
       registerFailure(state){
-         state.affirmativeMessage = "Failed to register user, user already registered.",
-         state.registerStatus = "failed"
+         state.affirmativeMessage = "Failed to register user, user already registered.";
+         state.registerStatus = "failed";
       }
    },
    actions:{
       login({commit},parent){
          return new Promise((resolve, reject) => {
-            console.log(`${this.state.baseURL}/auth/login`)//debugging
-            fetch(`${this.state.baseURL}/auth/login`, {
+            fetch(`http://localhost:8001/auth/login`, {
                method: "POST",
                headers: {
                   "Content-Type": "application/json"
@@ -69,16 +76,18 @@ export default new Vuex.Store({
             })
             .then(resp=>{
                if(resp.status == 200){
-                  var response = resp.json();
-                  localStorage.setItem("token", response.token);
-                  commit("authSuccess",response.token);
-                  commit("updateParent",response.parent);
-                  resolve();
+                  return resp.json();
                }else{
                   localStorage.removeItem("token");
                   commit("authFailure");
                   resolve();
                }
+            })
+            .then(data=>{
+               localStorage.setItem("token", data.token);
+               commit("authSuccess", data.token);
+               commit("updateParent", JSON.stringify(data.me));
+               resolve();
             })
             .catch(err=>{
                reject(err);
@@ -110,6 +119,14 @@ export default new Vuex.Store({
                   reject(err);
                });           
          });
+      },
+      logout({commit}){
+         return new Promise((resolve)=>{
+            commit("logout");
+            localStorage.removeItem("token");
+            resolve();
+         });
+         
       }
    } 
 });
