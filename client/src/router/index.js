@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import store from '../store'
+
 //views
 import Home from '../views/Home.vue'
 import Register from '../views/Register'
@@ -41,17 +41,6 @@ const router = new VueRouter({
   routes
 })
 
-
-router.beforeEach((to, from, next) => {
-  //checkLogin We want to check for a valid token, if there is a valid auth token, and the isLoggedIn===false we need to log back in.
-  //This catches a refresh that clears out store.
-  if(store.getters.token !== '' && !store.getters.isLoggedIn){
-    store.dispatch("LoginWithToken", store.getters.token)
-    .next(next());
-  }else{
-    next();
-  }
-})
 
 
 export default router

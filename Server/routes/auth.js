@@ -94,16 +94,4 @@ router.post('/login',(req,res,next)=>{
 });
 
 
-router.post('/loginwithtoken/',(req,res,next)=>{
-    let token = req.body.token;
-    console.log(req.body.info)
-
-    User.findOne({token:token},(err,foundUser)=>{
-        if(err){
-            res.status(500).send(`Error finding by token - ${err}`);
-        }else{
-            res.status(200).send({user:foundUser});
-        }
-    })
-});
 module.exports=router;

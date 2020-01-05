@@ -1,12 +1,24 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
-import Cookies from "js-cookie";
+//import Cookies from "js-cookie";
 
 Vue.use(Vuex);
 
 
 export default new Vuex.Store({
+   plugins: [createPersistedState({
+      storage: window.sessionStorage
+    /*  storage: {
+        getItem: key => Cookies.get(key),
+         setItem: (key, value) => Cookies.set(key, value, {
+            expires: 3,
+            secure: true
+         }),
+         removeItem: key => Cookies.remove(key)
+         
+      }*/
+   })],
    state:{
       parent: {},
       authStatus: 'Logged Out',
@@ -18,16 +30,6 @@ export default new Vuex.Store({
       authErrorResponse:'',
       authErrorMessage:''
    },
-   plugins: [createPersistedState({
-      storage: {
-         getItem: key => Cookies.get(key),
-         setItem: (key, value) => Cookies.set(key, value, {
-            expires: 3,
-            secure: true
-         }),
-         removeItem: key => Cookies.remove(key)
-      }
-   })],
    getters:{
       parent: state=>state.parent,
       authStatus: state=>state.authStatus,
@@ -132,6 +134,7 @@ export default new Vuex.Store({
       logout({commit}){
          return new Promise((resolve)=>{
             commit("logout");
+            sessionStorage.clear();
             localStorage.removeItem("token");
             resolve();
          });
