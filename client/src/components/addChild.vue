@@ -1,6 +1,7 @@
 <template>
     <v-form>
         <v-container>
+            <v-alert v-if="addChildStatus === 'Success'" class="success" dismissible>Successfully Added Child!</v-alert>
             <v-row>
                 <v-col cols="12" xs="12" md="12">
                     <v-text-field
@@ -56,6 +57,10 @@
                     >
                         Add
                     </v-btn>
+
+                    {{parent._id}}
+                    
+                    {{addChildStatus}}
                 </v-col>
             </v-row>
         </v-container>
@@ -70,7 +75,8 @@ export default {
             lastname: '',
             age: '',
             username:'',
-            password:''
+            password:'',
+            parent:{}
         }
     },
     methods:{
@@ -81,12 +87,14 @@ export default {
                 age: this.age,
                 username: this.username,
                 password: this.password,
-                parent_id: this.$store.getters.parent._id
+                parent_id: this.parent._id
             }
+           alert(JSON.stringify(child))
 
             //create the new child via store addChild action and then reset the form.
             this.$store.dispatch("addChild", child)
-            .then(this.resetForm());
+            .then(this.resetForm())
+            .catch(err=>alert(err));
             //.then(this.$router.push(`/assignchores/${this.$store.getters.newChildID}`));//head on to the initial assignment page for a new child.
         },
         resetForm: function (){
@@ -96,8 +104,16 @@ export default {
             this.username = '',
             this.password = ''
         },
-        computed:{
-            
+        getParent:function(){
+            this.parent = this.$store.getters.parent;
+        }
+    },
+    mounted(){
+        this.getParent();
+    },
+    computed:{
+        addChildStatus: function(){
+            return this.$store.getters.addChildStatus;
         }
     }
 }

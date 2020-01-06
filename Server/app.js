@@ -29,10 +29,12 @@ mongoose.connect(`mongodb+srv://${process.env.DBUSER}:${process.env.DBPASS}@clus
 // pulling in routes
 const index=require("./routes/index");
 const auth=require("./routes/auth");
+const child = require("./routes/child")
 
 // plugging in route
 app.use('/index',index);
 app.use('/auth',auth);
+app.use('/child',child);
 
 const port = process.env.PORT || 8001;
 

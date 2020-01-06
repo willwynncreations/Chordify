@@ -20,16 +20,18 @@ router.get('/', (req, res, next) => {
 
 
 router.post('/add',(req,res,next)=>{
-    Child.findOne({username:req.body.username},(err,foundChild)=>{
+    console.log(req.body)
+    Child.find({username:req.body.username},(err,foundChild)=>{
         if(err){
             res.status('500').send(`Error adding child - ${err}`);
         }else{
+            
             if(foundChild.username === req.body.username){
-                res.status('500').send(`Username already in use.`);
+                res.status('501').send(`Username already in use.`);
             }else{
 
                 if(req.body.password.length < 7){
-                    res.status('500').send(`Error, password must be 8 or more characters`);
+                    res.status('502').send(`Error, password must be 8 or more characters`);
                 }else{
                     let saltRounds = 10;
                     bcrypt.hash(req.body.password,saltRounds,(err,hash)=>{
@@ -46,14 +48,17 @@ router.post('/add',(req,res,next)=>{
                         });
                         //save the new child
                         child.save((err)=>{
+                            console.log(child);
                             if(err){
-                                res.status('500').send(`Error saving new child - ${err}`)
+                                console.log(err);
+                                res.status('503').send(`Error saving new child - ${err}`)
                             }else{//pull up the child we just created and return it.
-                                Child.findOne({_username:req.body.username},(err,newChild)=>{
+                                Child.find({_username:req.body.username},(err,newChild)=>{
                                     if(err){
-                                        req.status('500').send(`Error retrieving new child ${err}`)
+                                        req.status('504').send(`Error retrieving new child ${err}`)
 
                                     }else{
+                                        console.log(newChild);
                                         req.status(200).send({child:newChild});
                                     }
                                 })

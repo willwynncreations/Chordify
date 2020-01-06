@@ -1,16 +1,12 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
-//import Cookies from "js-cookie";
+import Cookies from "js-cookie";
 
 Vue.use(Vuex);
 
 
 export default new Vuex.Store({
-   plugins: [createPersistedState({
-      storage: window.sessionStorage
-
-   })],
    state:{
       parent: {},
       authStatus: 'Logged Out',
@@ -24,7 +20,17 @@ export default new Vuex.Store({
       newChildID: '',
       children: [],
       addChildStatus: ''
-   },
+   }, 
+   plugins: [
+      createPersistedState({
+         getState: key => Cookies.getJSON(key),
+         setState: (key, state) =>
+            Cookies.set(key, state, {
+               expires: 3,
+               secure: false
+            })
+      })
+   ],
    getters:{
       parent: state=>state.parent,
       authStatus: state=>state.authStatus,
@@ -60,6 +66,7 @@ export default new Vuex.Store({
          state.token = '';
          state.authStatus = 'Logged Out';
          state.isLoggedIn = false;
+         state.parent = {};
       },
       registerSuccess(state){
          state.affirmativeMessage = "Successfully registered, plese login.";
@@ -102,7 +109,7 @@ export default new Vuex.Store({
             .then(data=>{
                localStorage.setItem("token", data.token);
                commit("authSuccess", data.token);
-               commit("updateParent", JSON.stringify(data.me));
+               commit("updateParent",data.me);
                resolve();
             })
             .catch(err=>{
@@ -161,10 +168,15 @@ export default new Vuex.Store({
                   body: JSON.stringify(child)
                })
             .then(resp=>{
-               if(resp.ok){
+               if(resp.status == 200){
                   return resp.json();
-               }else{
+               }else if(resp.status == 503){
+                  alert(resp.statusText);
+                  reject(resp.statusText);
+               }
+               else{
                   commit("addChildFailure");
+                  alert(resp.status)
                   reject();
                }
             })
