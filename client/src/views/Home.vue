@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <Landing />
+
   </div>
 </template>
 
@@ -12,6 +13,11 @@ export default {
   name: 'home',
   components: {
     Landing
+  },
+  data(){
+    return{
+      dialog:false
+    }
   }
 }
 </script>

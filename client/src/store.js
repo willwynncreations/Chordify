@@ -9,15 +9,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
    plugins: [createPersistedState({
       storage: window.sessionStorage
-    /*  storage: {
-        getItem: key => Cookies.get(key),
-         setItem: (key, value) => Cookies.set(key, value, {
-            expires: 3,
-            secure: true
-         }),
-         removeItem: key => Cookies.remove(key)
-         
-      }*/
+
    })],
    state:{
       parent: {},
@@ -28,7 +20,10 @@ export default new Vuex.Store({
       affirmativeMessage:'',
       registerStatus:'',
       authErrorResponse:'',
-      authErrorMessage:''
+      authErrorMessage:'',
+      newChildID: '',
+      children: [],
+      addChildStatus: ''
    },
    getters:{
       parent: state=>state.parent,
@@ -39,7 +34,10 @@ export default new Vuex.Store({
       token: state=>state.token,
       state: state=>state,
       authErrorMessage: state=> state.authErrorMessage,
-      authErrorResponse: state=> state.authErrorResponse
+      authErrorResponse: state=> state.authErrorResponse,
+      newChildID:state=> state.newChildID,
+      children: state=>state.children,
+      addChildStatus: state=>state.addChildStatus
    },
    mutations:{
       authSuccess(state,token){
@@ -73,6 +71,13 @@ export default new Vuex.Store({
       },clearAuthError(state){
          state.authErrorMessage = '';
          state.authErrorResponse = '';
+      },addChild(state,child){
+         state.newChildID = child._id;
+         state.children.push(child);
+         state.addChildStatus = "Success";
+      },addChildFailure(state){
+         state.addChildStatus = "Failure";
+         state.newChildID = '';
       }
    },
    actions:{
@@ -146,37 +151,30 @@ export default new Vuex.Store({
             resolve();
          });
       },
-      LoginWithToken({commit},token){
+      addChild({commit},child){
          return new Promise((resolve,reject)=>{
-
-            let info = {
-               token:token
-            }
-
-
-            fetch(`http://localhost:8001/auth/loginwithtoken/`, {
+            fetch('http://localhost:8001/child/add',{
                method: "POST",
-               headers: {
-                  "Content-Type": "application/json"
-               },
-               body: JSON.stringify(info)
-            })
+                  headers: {
+                     "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify(child)
+               })
             .then(resp=>{
-               if(resp.status == 200){
+               if(resp.ok){
                   return resp.json();
                }else{
-                  localStorage.removeItem("token");
-                  commit("authFailure",resp);
-                  resolve();
+                  commit("addChildFailure");
+                  reject();
                }
             })
-            .then(data=>{        
-               commit("authSuccess",data.token);
+            .then(data=>{
+               commit("addNewChild",data.child);
                resolve();
             })
             .catch(err=>{
-               commit("authFailure");
-               reject(err)
+               commit("addChildFailure");
+               resolve(err)
             });
          });
       }
