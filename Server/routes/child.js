@@ -30,8 +30,8 @@ router.post('/add',(req,res,next)=>{
                 res.status('501').send(`Username already in use.`);
             }else{
 
-                if(req.body.password.length < 7){
-                    res.status('502').send(`Error, password must be 8 or more characters`);
+                if(req.body.password.length != 4){
+                    res.status('502').send(`Error, PIN code must be 4 digits`);
                 }else{
                     let saltRounds = 10;
                     bcrypt.hash(req.body.password,saltRounds,(err,hash)=>{
@@ -55,11 +55,11 @@ router.post('/add',(req,res,next)=>{
                             }else{//pull up the child we just created and return it.
                                 Child.find({_username:req.body.username},(err,newChild)=>{
                                     if(err){
-                                        req.status('504').send(`Error retrieving new child ${err}`)
+                                        res.status('504').send(`Error retrieving new child ${err}`)
 
                                     }else{
                                         console.log(newChild);
-                                        req.status(200).send({child:newChild});
+                                        res.status(200).send({child:newChild});
                                     }
                                 })
                             }

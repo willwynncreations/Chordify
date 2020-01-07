@@ -44,9 +44,9 @@
                     <v-text-field
                         v-model="password"
                         type="password"
-                        placeholder="Password"
+                        placeholder="PIN code"
                         required
-                        label="Password"
+                        label="4 Digit PIN"
                     >
 
                     </v-text-field>
@@ -57,10 +57,6 @@
                     >
                         Add
                     </v-btn>
-
-                    {{parent._id}}
-                    
-                    {{addChildStatus}}
                 </v-col>
             </v-row>
         </v-container>
@@ -94,8 +90,7 @@ export default {
             //create the new child via store addChild action and then reset the form.
             this.$store.dispatch("addChild", child)
             .then(this.resetForm())
-            .catch(err=>alert(err));
-            //.then(this.$router.push(`/assignchores/${this.$store.getters.newChildID}`));//head on to the initial assignment page for a new child.
+            .then(this.$router.push(`/assignchores/${this.$store.getters.newChildID}`));//head on to the initial assignment page for a new child.
         },
         resetForm: function (){
             this.firstname = '',
