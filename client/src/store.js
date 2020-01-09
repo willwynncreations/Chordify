@@ -88,6 +88,9 @@ export default new Vuex.Store({
       },addChildFailure(state){
          state.addChildStatus = "Failure";
          state.newChildID = '';
+      },updateChildren(state,children){
+         state.children.length = 0; //empty the children array
+         state.children = children;
       }
    },
    actions:{
@@ -113,6 +116,7 @@ export default new Vuex.Store({
                localStorage.setItem("token", data.token);
                commit("authSuccess", data.token);
                commit("updateParent",data.me);
+               
                resolve();
             })
             .catch(err=>{
@@ -189,6 +193,26 @@ export default new Vuex.Store({
                reject(err)
             });
          });
+      },
+      loadChildren({commit}){
+         return new Promise((resolve,reject)=>{
+            fetch(`http://localhost:8001/child/all/${this.state.parent._id}`)
+            .then(resp=>{
+               if(resp.status == 200){
+                  return resp.json();
+               }else{
+                  reject(resp.status);
+               }
+            })
+            .then(data=>{
+               commit("updateChildren",data.children)
+               resolve()
+            })
+            .catch(err=>{
+               reject(err)
+            })
+         });
       }
-   } 
+   }
+    
 });

@@ -120,4 +120,18 @@ router.post('/login', (req, res, next) => {
         }
     });
 });
+
+
+router.get('/all/:id',(req,res,next)=>{//Gets all children by a parent ID
+   // console.log(req.params.id)
+    Child.find({parent_id:req.params.id},(err,foundChildren)=>{
+        if(err){
+            res.status(501).send(`Error finding by id ${err}`)
+        }else{
+            console.log(foundChildren);
+            res.status(200).send({children:foundChildren});
+        }
+    });
+});
+
 module.exports = router;

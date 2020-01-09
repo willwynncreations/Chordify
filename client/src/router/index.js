@@ -7,6 +7,7 @@ import Register from '../views/Register'
 import Login from '../views/Login'
 import AddChild from '../views/AddChild'
 import AssignChores from '../views/AssignChores'
+import Dashboard from '../views/Dashboard'
 
 
 Vue.use(VueRouter)
@@ -44,6 +45,11 @@ const routes = [
     path: '/assignchores',
     name: 'assignchores',
     component: AssignChores
+  },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: Dashboard
   }
 ]
 

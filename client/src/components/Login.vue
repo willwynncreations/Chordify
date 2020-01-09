@@ -52,7 +52,7 @@ export default {
                     this.message=this.$store.getters.authErrorMessage
                     this.$store.dispatch("clearAuthError"); // We need to clear the store messages so that we can continue with another login attempt.
                 }else{
-                    this.$router.push("/")
+                    this.$router.push("/dashboard")
                 }
             });
         }
