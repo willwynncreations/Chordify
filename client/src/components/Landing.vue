@@ -16,28 +16,7 @@
           justify="center"
           style="height:20px"
         >
-          <span><strong>Auth Status</strong> - {{getStatus}}</span>
-        </v-row>
-        <v-row
-          align="center"
-          justify="center"
-          style="height:20px"
-        >
-          <span><strong>Token</strong> - {{getToken}}</span>
-        </v-row>
-        <v-row
-          align="center"
-          justify="center"
-          style="height:20px"
-        >
-          <span><strong>Is Logged In</strong> - {{getIsLoggedIn}}</span>
-        </v-row>
-        <v-row
-          align="center"
-          justify="center"          
-          style="height:20px"
-        >
-          <span><strong>Parent</strong> - {{getParent}}</span>
+          <span><strong>Auth Status</strong> - {{getState}}</span>
         </v-row>
         <v-row
           align="center"
@@ -81,6 +60,9 @@ export default {
     },
     getIsLoggedIn:function(){
       return this.$store.getters.isLoggedIn;
+    },
+    getState: function(){
+      return this.$store.getters.state
     }
   },
   methods:{

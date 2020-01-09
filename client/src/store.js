@@ -67,9 +67,11 @@ export default new Vuex.Store({
          state.authStatus = 'Logged Out';
          state.isLoggedIn = false;
          state.parent = {};
+         state.children = [];
+         state.addChildStatus = '';
       },
       registerSuccess(state){
-         state.affirmativeMessage = "Successfully registered, plese login.";
+         state.affirmativeMessage = "Successfully registered, please login.";
          state.registerStatus = "success";
       },
       registerFailure(state){
@@ -78,9 +80,10 @@ export default new Vuex.Store({
       },clearAuthError(state){
          state.authErrorMessage = '';
          state.authErrorResponse = '';
-      },addChild(state,child){
+      },addNewChild(state,child){
          state.newChildID = child._id;
-         state.children.push(child);
+         alert(child);
+         state.children.push(child)[0];
          state.addChildStatus = "Success";
       },addChildFailure(state){
          state.addChildStatus = "Failure";
@@ -170,14 +173,11 @@ export default new Vuex.Store({
             .then(resp=>{
                if(resp.status == 200){
                   return resp.json();
-               }else if(resp.status == 503){
-                  alert(resp.statusText);
-                  reject(resp.statusText);
                }
                else{
                   commit("addChildFailure");
                   alert(resp.status)
-                  reject();
+                  resolve();
                }
             })
             .then(data=>{
@@ -186,7 +186,7 @@ export default new Vuex.Store({
             })
             .catch(err=>{
                commit("addChildFailure");
-               resolve(err)
+               reject(err)
             });
          });
       }

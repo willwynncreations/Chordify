@@ -6,6 +6,7 @@ import Home from '../views/Home.vue'
 import Register from '../views/Register'
 import Login from '../views/Login'
 import AddChild from '../views/AddChild'
+import AssignChores from '../views/AssignChores'
 
 
 Vue.use(VueRouter)
@@ -38,6 +39,11 @@ const routes = [
     path: '/addchild',
     name: 'addChild',
     component: AddChild
+  },
+  {
+    path: '/assignchores',
+    name: 'assignchores',
+    component: AssignChores
   }
 ]
 

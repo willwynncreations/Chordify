@@ -33,8 +33,12 @@ var UserSchema = new Schema({
     },
     token:{
         type:String
+    },
+    linked_parent:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true
     }
-   
 });
 
 

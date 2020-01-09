@@ -85,7 +85,7 @@ export default {
                 password: this.password,
                 parent_id: this.parent._id
             }
-           alert(JSON.stringify(child))
+           
 
             //create the new child via store addChild action and then reset the form.
             this.$store.dispatch("addChild", child)

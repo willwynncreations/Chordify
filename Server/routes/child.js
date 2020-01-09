@@ -20,7 +20,7 @@ router.get('/', (req, res, next) => {
 
 
 router.post('/add',(req,res,next)=>{
-    console.log(req.body)
+    //console.log(req.body)
     Child.find({username:req.body.username},(err,foundChild)=>{
         if(err){
             res.status('500').send(`Error adding child - ${err}`);
@@ -48,17 +48,17 @@ router.post('/add',(req,res,next)=>{
                         });
                         //save the new child
                         child.save((err)=>{
-                            console.log(child);
+                            //console.log(child);
                             if(err){
-                                console.log(err);
+                                //console.log(err);
                                 res.status('503').send(`Error saving new child - ${err}`)
                             }else{//pull up the child we just created and return it.
-                                Child.find({_username:req.body.username},(err,newChild)=>{
+                                Child.find({username:req.body.username},(err,newChild)=>{
                                     if(err){
                                         res.status('504').send(`Error retrieving new child ${err}`)
 
                                     }else{
-                                        console.log(newChild);
+                                        //console.log(newChild);
                                         res.status(200).send({child:newChild});
                                     }
                                 })
