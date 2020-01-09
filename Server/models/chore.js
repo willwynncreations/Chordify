@@ -30,7 +30,8 @@ var ChoreSchema = new Schema({
     },
     status:{
         type:String,
-        required:true
+        required:true,
+        default:'Active'
     }
    
 });

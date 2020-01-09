@@ -7,15 +7,15 @@
         </v-row>
         <v-row>
             <v-col cols="12" xs="12" md="4">
-                <v-card>
+                <v-card dark>
                     <v-card-title>Create Chore</v-card-title>
                     <v-card-text>
-                        <addChore></addChore>
+                        <createChore></createChore>
                     </v-card-text>
                 </v-card>
             </v-col>
             <v-col cols="12" xs="12" md="4">
-                <v-card>
+                <v-card dark>
                     <v-card-title>Add Child</v-card-title>
                     <v-card-text>
                         <addChild></addChild>
@@ -23,7 +23,7 @@
                 </v-card>
             </v-col>
             <v-col cols="12" xs="12" md="4">
-                <v-card>
+                <v-card dark>
                     <v-card-title>Assign Chore</v-card-title>
                     <v-card-text>
                         <addChild></addChild>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import addChore from '../components/addChore'
+import createChore from '../components/createChore'
 import addChild from '../components/addChild'
 export default {
     name: "Dashboard",
@@ -50,14 +50,14 @@ export default {
     },
     methods:{
         loadChildren: function(){
-            this.$store.dispatch("loadChildren");
+            this.$store.dispatch("loadChildren");//load up the parent's children in the store.
         },
         getChildren: function(){
-            this.children = this.$store.getters.children;
+            this.children = this.$store.getters.children;//pull children from the store
         }
     },
     components:{
-        addChore,
+        createChore,
         addChild
     },
     computed:{

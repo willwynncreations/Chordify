@@ -212,6 +212,27 @@ export default new Vuex.Store({
                reject(err)
             })
          });
+      },
+      createChore({commit},chore){
+         return new Promise((resolve,reject)=>{
+            fetch(`http://localhost:8001/chore/add`,{
+               method: "POST",
+               headers: {
+                  "Content-Type": "application/json"
+               },
+               body: JSON.stringify(chore)
+            })
+            .then(resp=>{
+               if(resp.status == 200){
+                  return resp.json();
+               }else{
+                  reject(resp.status)
+               }
+            })
+            .then(data=>{
+               commit("updateChoresList",data.chore);
+            });
+         });
       }
    }
     
